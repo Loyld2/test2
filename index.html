@@ -508,16 +508,18 @@
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             opacity: 0;
-            transition: opacity 0.4s;
+            transition: opacity 0.5s;
+            z-index: 1;
         }
 
         .card:hover::before {
             opacity: 1;
+            animation: borderGlow 2s ease-in-out infinite;
         }
 
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        @keyframes borderGlow {
+            0%, 100% { filter: brightness(1) drop-shadow(0 0 2px rgba(0, 212, 255, 0.3)); }
+            50% { filter: brightness(1.3) drop-shadow(0 0 8px rgba(0, 212, 255, 0.5)); }
         }
 
         .card-header {
@@ -1050,19 +1052,90 @@
         /* ===================== REVEAL ANIMATIONS ===================== */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Slide up */
+        .reveal {
+            transform: translateY(60px) scale(0.97);
+            filter: blur(4px);
         }
 
         .reveal.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
+            filter: blur(0);
         }
 
+        /* Slide from left */
+        .reveal-left {
+            transform: translateX(-80px) scale(0.95);
+            filter: blur(3px);
+        }
+
+        .reveal-left.visible {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* Slide from right */
+        .reveal-right {
+            transform: translateX(80px) scale(0.95);
+            filter: blur(3px);
+        }
+
+        .reveal-right.visible {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* Zoom in */
+        .reveal-zoom {
+            transform: scale(0.5);
+            filter: blur(6px);
+        }
+
+        .reveal-zoom.visible {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+        }
+
+        /* Rotate + fade */
+        .reveal-rotate {
+            transform: rotate(-8deg) scale(0.8);
+            filter: blur(4px);
+        }
+
+        .reveal-rotate.visible {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+            filter: blur(0);
+        }
+
+        /* Flip in */
+        .reveal-flip {
+            transform: perspective(800px) rotateY(-30deg) translateY(30px);
+            filter: blur(2px);
+        }
+
+        .reveal-flip.visible {
+            opacity: 1;
+            transform: perspective(800px) rotateY(0) translateY(0);
+            filter: blur(0);
+        }
+
+        /* Stagger delays */
         .reveal-delay-1 { transition-delay: 0.1s; }
         .reveal-delay-2 { transition-delay: 0.2s; }
         .reveal-delay-3 { transition-delay: 0.3s; }
         .reveal-delay-4 { transition-delay: 0.4s; }
+        .reveal-delay-5 { transition-delay: 0.5s; }
+        .reveal-delay-6 { transition-delay: 0.6s; }
+        .reveal-delay-7 { transition-delay: 0.7s; }
+        .reveal-delay-8 { transition-delay: 0.8s; }
 
         /* ===================== ANIMATIONS ===================== */
         @keyframes fadeInUp {
@@ -1073,6 +1146,858 @@
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== PERMANENT FLOATING SHAPES ===== */
+        .floating-shapes {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.07;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        .shape-square {
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+        }
+
+        .shape-circle {
+            border: 2px solid #7c3aed;
+            border-radius: 50%;
+        }
+
+        .shape-triangle {
+            width: 0 !important;
+            height: 0 !important;
+            background: none !important;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid rgba(0, 212, 255, 0.15);
+        }
+
+        .shape-diamond {
+            background: rgba(124, 58, 237, 0.2);
+            transform: rotate(45deg);
+            border-radius: 4px;
+        }
+
+        .shape-cross {
+            background: none;
+            position: absolute;
+        }
+
+        .shape-cross::before,
+        .shape-cross::after {
+            content: '';
+            position: absolute;
+            background: rgba(236, 72, 153, 0.25);
+            border-radius: 2px;
+        }
+
+        .shape-cross::before {
+            width: 100%;
+            height: 3px;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+
+        .shape-cross::after {
+            width: 3px;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .shape-ring {
+            border: 3px solid rgba(0, 212, 255, 0.2);
+            border-radius: 50%;
+            background: none;
+        }
+
+        .shape-1 { width: 50px; height: 50px; top: 10%; left: 5%; animation: shapeFloat1 7s infinite, shapeSpin 20s linear infinite; }
+        .shape-2 { width: 35px; height: 35px; top: 20%; right: 8%; animation: shapeFloat2 9s infinite, shapeSpin 15s linear infinite reverse; }
+        .shape-3 { width: 45px; height: 45px; top: 60%; left: 3%; animation: shapeFloat3 8s infinite; }
+        .shape-4 { width: 30px; height: 30px; top: 75%; right: 5%; animation: shapeFloat1 10s infinite reverse, shapeSpin 25s linear infinite; }
+        .shape-5 { width: 40px; height: 40px; top: 40%; left: 90%; animation: shapeFloat2 6s infinite, shapeSpin 18s linear infinite; }
+        .shape-6 { width: 25px; height: 25px; top: 85%; left: 15%; animation: shapeFloat3 11s infinite reverse; }
+        .shape-7 { width: 55px; height: 55px; top: 5%; left: 50%; animation: shapeFloat1 8s infinite, shapeSpin 22s linear infinite reverse; }
+        .shape-8 { width: 30px; height: 30px; top: 50%; left: 60%; animation: shapeFloat2 7s infinite reverse; }
+        .shape-9 { width: 20px; height: 20px; top: 30%; left: 30%; animation: shapeFloat3 9s infinite, shapeSpin 12s linear infinite; }
+        .shape-10 { width: 40px; height: 40px; top: 70%; left: 80%; animation: shapeFloat1 10s infinite reverse, shapeSpin 16s linear infinite; }
+        .shape-11 { width: 18px; height: 18px; top: 15%; left: 70%; animation: shapeFloat2 12s infinite; }
+        .shape-12 { width: 48px; height: 48px; top: 90%; left: 45%; animation: shapeFloat3 8s infinite reverse, shapeSpin 30s linear infinite; }
+
+        @keyframes shapeFloat1 {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(var(--spin, 0deg)); }
+            25% { transform: translateY(-25px) translateX(15px) rotate(calc(var(--spin, 0deg) + 10deg)); }
+            50% { transform: translateY(-10px) translateX(-10px) rotate(calc(var(--spin, 0deg) - 5deg)); }
+            75% { transform: translateY(-30px) translateX(8px) rotate(calc(var(--spin, 0deg) + 8deg)); }
+        }
+
+        @keyframes shapeFloat2 {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(20px) translateX(-15px); }
+            50% { transform: translateY(-15px) translateX(20px); }
+            75% { transform: translateY(10px) translateX(-8px); }
+        }
+
+        @keyframes shapeFloat3 {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            33% { transform: translateY(-20px) translateX(20px); }
+            66% { transform: translateY(15px) translateX(-15px); }
+        }
+
+        @keyframes shapeSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== LOGO BOUNCE ===== */
+        .nav-logo .logo-icon {
+            animation: logoBounce 3s ease-in-out infinite;
+        }
+
+        @keyframes logoBounce {
+            0%, 100% { transform: translateY(0) scale(1); }
+            25% { transform: translateY(-4px) scale(1.05); }
+            50% { transform: translateY(0) scale(1); }
+            75% { transform: translateY(-2px) scale(1.02); }
+        }
+
+        /* ===== HERO BADGE SHIMMER ===== */
+        .hero-badge {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.15), transparent);
+            animation: badgeShimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes badgeShimmer {
+            0% { left: -100%; }
+            50%, 100% { left: 100%; }
+        }
+
+        /* ===== PULSE GLOW ON BUTTONS ===== */
+        .btn-primary {
+            animation: btnPulse 2.5s ease-in-out infinite;
+        }
+
+        @keyframes btnPulse {
+            0%, 100% { box-shadow: 0 4px 20px var(--accent-glow); }
+            50% { box-shadow: 0 4px 40px rgba(0, 212, 255, 0.5), 0 0 60px rgba(124, 58, 237, 0.2); }
+        }
+
+        /* ===== CARD ICON CONTINUOUS BOUNCE ===== */
+        .card-icon {
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .card:hover .card-icon {
+            animation: iconBounceHover 0.6s ease-in-out infinite;
+        }
+
+        @keyframes iconBounceHover {
+            0%, 100% { transform: translateY(-5px) scale(1.1) rotate(-5deg); }
+            50% { transform: translateY(-10px) scale(1.15) rotate(5deg); }
+        }
+
+        /* ===== AVANTAGE ICON CONTINUOUS FLOAT ===== */
+        .avantage-icon {
+            animation: avantFloat 3s ease-in-out infinite;
+        }
+
+        .avantage:nth-child(1) .avantage-icon { animation-delay: 0s; }
+        .avantage:nth-child(2) .avantage-icon { animation-delay: 0.5s; }
+        .avantage:nth-child(3) .avantage-icon { animation-delay: 1s; }
+        .avantage:nth-child(4) .avantage-icon { animation-delay: 1.5s; }
+
+        @keyframes avantFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-8px) scale(1.08); }
+        }
+
+        .avantage:hover .avantage-icon {
+            animation: avantHover 0.5s ease-in-out infinite;
+        }
+
+        @keyframes avantHover {
+            0%, 100% { transform: scale(1.15) translateY(-8px); }
+            50% { transform: scale(1.2) translateY(-12px); }
+        }
+
+        /* ===== STEP NUMBER PULSE ===== */
+        .step-number {
+            animation: stepPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes stepPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.3); }
+            50% { box-shadow: 0 0 20px 5px rgba(0, 212, 255, 0.15); }
+        }
+
+        /* ===== STAT NUMBER GLOW ===== */
+        .stat-number {
+            animation: statGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes statGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        /* ===== TESTIMONIAL STARS TWINKLE ===== */
+        .temoignage-stars svg {
+            animation: starTwinkle 2s ease-in-out infinite;
+        }
+
+        .temoignage:nth-child(1) .temoignage-stars svg:nth-child(1) { animation-delay: 0s; }
+        .temoignage:nth-child(1) .temoignage-stars svg:nth-child(2) { animation-delay: 0.15s; }
+        .temoignage:nth-child(1) .temoignage-stars svg:nth-child(3) { animation-delay: 0.3s; }
+        .temoignage:nth-child(1) .temoignage-stars svg:nth-child(4) { animation-delay: 0.45s; }
+        .temoignage:nth-child(1) .temoignage-stars svg:nth-child(5) { animation-delay: 0.6s; }
+
+        .temoignage:nth-child(2) .temoignage-stars svg:nth-child(1) { animation-delay: 0.2s; }
+        .temoignage:nth-child(2) .temoignage-stars svg:nth-child(2) { animation-delay: 0.35s; }
+        .temoignage:nth-child(2) .temoignage-stars svg:nth-child(3) { animation-delay: 0.5s; }
+        .temoignage:nth-child(2) .temoignage-stars svg:nth-child(4) { animation-delay: 0.65s; }
+        .temoignage:nth-child(2) .temoignage-stars svg:nth-child(5) { animation-delay: 0.8s; }
+
+        .temoignage:nth-child(3) .temoignage-stars svg:nth-child(1) { animation-delay: 0.1s; }
+        .temoignage:nth-child(3) .temoignage-stars svg:nth-child(2) { animation-delay: 0.25s; }
+        .temoignage:nth-child(3) .temoignage-stars svg:nth-child(3) { animation-delay: 0.4s; }
+        .temoignage:nth-child(3) .temoignage-stars svg:nth-child(4) { animation-delay: 0.55s; }
+        .temoignage:nth-child(3) .temoignage-stars svg:nth-child(5) { animation-delay: 0.7s; }
+
+        @keyframes starTwinkle {
+            0%, 100% { fill: #f59e0b; transform: scale(1); }
+            50% { fill: #fbbf24; transform: scale(1.2); }
+        }
+
+        /* ===== HERO TITLE SHIMMER ===== */
+        .hero h1 .highlight {
+            position: relative;
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ===== CTA SECTION ANIMATED BG ===== */
+        .cta-bg {
+            animation: ctaPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes ctaPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* ===== FOOTER SOCIAL BOUNCE ===== */
+        .footer-socials a {
+            animation: socialBounce 3s ease-in-out infinite;
+        }
+
+        .footer-socials a:nth-child(1) { animation-delay: 0s; }
+        .footer-socials a:nth-child(2) { animation-delay: 0.3s; }
+        .footer-socials a:nth-child(3) { animation-delay: 0.6s; }
+
+        @keyframes socialBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .footer-socials a:hover {
+            animation: socialHover 0.4s ease-in-out infinite;
+        }
+
+        @keyframes socialHover {
+            0%, 100% { transform: translateY(-4px) scale(1.1); }
+            50% { transform: translateY(-8px) scale(1.15); }
+        }
+
+        /* ===== PROCESS LINE ANIMATION ===== */
+        .process-steps::before {
+            background: linear-gradient(to bottom, var(--accent), rgba(0,212,255,0.1), var(--accent));
+            background-size: 100% 200%;
+            animation: lineGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes lineGlow {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 0% 100%; }
+        }
+
+        /* ===== NAV CTA GLOW ===== */
+        .nav-cta {
+            animation: navCtaGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes navCtaGlow {
+            0%, 100% { box-shadow: 0 2px 10px rgba(0, 212, 255, 0.2); }
+            50% { box-shadow: 0 2px 25px rgba(0, 212, 255, 0.4), 0 0 40px rgba(124, 58, 237, 0.15); }
+        }
+
+        /* ===== AVANTAGE BOTTOM LINE ANIMATION ===== */
+        .avantage::after {
+            animation: avantLine 3s ease-in-out infinite;
+        }
+
+        @keyframes avantLine {
+            0%, 100% { transform: scaleX(0); transform-origin: left; }
+            50% { transform: scaleX(1); transform-origin: left; }
+            51% { transform-origin: right; }
+            100% { transform: scaleX(0); transform-origin: right; }
+        }
+
+        /* ===== CARD LINK ARROW ANIMATION ===== */
+        .card-link svg {
+            animation: arrowMove 1.5s ease-in-out infinite;
+        }
+
+        @keyframes arrowMove {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(4px); }
+        }
+
+        /* ===== BACK TO TOP PULSE ===== */
+        .back-to-top.visible {
+            animation: topPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes topPulse {
+            0%, 100% { box-shadow: 0 4px 20px var(--accent-glow); }
+            50% { box-shadow: 0 4px 35px rgba(0, 212, 255, 0.5); }
+        }
+
+        /* ===================== ENHANCED EFFECTS ===================== */
+
+        /* ===== 3D CARD TILT ON HOVER ===== */
+        .card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 80px rgba(0, 212, 255, 0.08);
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--radius);
+            background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 212, 255, 0.12) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+        }
+
+        .card:hover::after {
+            opacity: 1;
+        }
+
+        /* ===== CARD GLOW RING ===== */
+
+        /* ===== SECTION DIVIDER WAVES ===== */
+        .section-divider {
+            width: 100%;
+            overflow: hidden;
+            line-height: 0;
+            position: relative;
+        }
+
+        .section-divider svg {
+            display: block;
+            width: 100%;
+            height: 60px;
+        }
+
+        .section-divider .wave {
+            fill: none;
+            stroke-width: 2;
+            animation: waveDash 3s linear infinite;
+        }
+
+        @keyframes waveDash {
+            to { stroke-dashoffset: -100; }
+        }
+
+        /* ===== STAT ITEM ENHANCED ===== */
+        .stat-item {
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), rgba(124, 58, 237, 0.05));
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px) scale(1.03);
+        }
+
+        .stat-item:hover::before {
+            opacity: 1;
+        }
+
+        .stat-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20%;
+            width: 60%;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 3px;
+            transform: scaleX(0);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-item:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* ===== MAGNETIC BUTTON EFFECT ===== */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        /* ===== SECTION TAG ANIMATED UNDERLINE ===== */
+        .section-tag {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-tag::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-accent);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-50%);
+        }
+
+        .section-tag.active::after {
+            width: 100%;
+        }
+
+        /* ===== AVANTAGE CARD HOVER GLOW ===== */
+        .avantage {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .avantage:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.25),
+                0 0 60px rgba(0, 212, 255, 0.06);
+            border-color: rgba(0, 212, 255, 0.15);
+        }
+
+        /* ===== TESTIMONIAL CARD GLASS EFFECT ===== */
+        .temoignage {
+            backdrop-filter: blur(10px);
+            background: rgba(17, 29, 50, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .temoignage:hover {
+            border-color: rgba(0, 212, 255, 0.15);
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .temoignage::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .temoignage:hover::before {
+            opacity: 1;
+        }
+
+        /* ===== AUTHOR AVATAR GLOW ===== */
+        .author-avatar {
+            position: relative;
+            transition: all 0.4s;
+        }
+
+        .author-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 14px;
+            background: var(--gradient-accent);
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s;
+            filter: blur(8px);
+        }
+
+        .temoignage:hover .author-avatar::after {
+            opacity: 0.5;
+        }
+
+        .temoignage:hover .author-avatar {
+            transform: scale(1.05);
+        }
+
+        /* ===== PROCESS STEP ENHANCED ===== */
+        .process-step {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .process-step:hover {
+            transform: translateX(10px);
+        }
+
+        .process-step:hover .step-number {
+            background: var(--gradient-accent);
+            color: #fff;
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        .step-number {
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* ===== STEP CONTENT HIGHLIGHT ===== */
+        .step-content {
+            transition: all 0.4s;
+        }
+
+        .process-step:hover .step-content h3 {
+            color: var(--accent);
+        }
+
+        .step-content h3 {
+            transition: color 0.3s;
+        }
+
+        /* ===== CARD BODY LIST STAGGER ===== */
+        .card-body ul li {
+            opacity: 0;
+            transform: translateX(-15px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .card:hover .card-body ul li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .card:hover .card-body ul li:nth-child(1) { transition-delay: 0.05s; }
+        .card:hover .card-body ul li:nth-child(2) { transition-delay: 0.1s; }
+        .card:hover .card-body ul li:nth-child(3) { transition-delay: 0.15s; }
+        .card:hover .card-body ul li:nth-child(4) { transition-delay: 0.2s; }
+
+        /* ===== CHECK MARK PULSE ===== */
+        .check {
+            transition: all 0.3s;
+        }
+
+        .card:hover .check {
+            animation: checkPulse 0.5s ease-out;
+        }
+
+        @keyframes checkPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); background: rgba(34, 197, 94, 0.3); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== HERO CONTENT TEXT REVEAL ===== */
+        .hero h1,
+        .hero p,
+        .hero-buttons {
+            text-shadow: 0 0 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== FLOATING RING EFFECT ON HERO ===== */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            border: 1px solid rgba(0, 212, 255, 0.06);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: heroRing 8s linear infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            border: 1px solid rgba(124, 58, 237, 0.06);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            animation: heroRing 6s linear infinite reverse;
+        }
+
+        @keyframes heroRing {
+            from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.1); }
+            to { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+        }
+
+        /* ===== NAV LINK UNDERLINE EFFECT ===== */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 60%;
+        }
+
+        /* ===== CTA SECTION GLASS PANEL ===== */
+        .cta-content {
+            background: rgba(17, 29, 50, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            padding: 60px 40px;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s;
+        }
+
+        .cta-content:hover {
+            border-color: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== FOOTER LINK HOVER SLIDE ===== */
+        .footer-col ul a {
+            position: relative;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .footer-col ul a::before {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .footer-col ul a:hover::before {
+            width: 100%;
+        }
+
+        /* ===== GRADIENT TEXT SHIMMER ON SECTION HEADERS ===== */
+        .section-header h2 {
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-accent);
+            border-radius: 3px;
+            transform: translateX(-50%);
+            animation: headerLine 2s ease-in-out infinite;
+        }
+
+        @keyframes headerLine {
+            0%, 100% { width: 60px; opacity: 0.7; }
+            50% { width: 100px; opacity: 1; }
+        }
+
+        /* ===== SCROLL PROGRESS LINE ===== */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--gradient-accent);
+            z-index: 1001;
+            transition: width 0.1s;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        /* ===== BACK TO TOP ENHANCED ===== */
+        .back-to-top {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        /* ===== HAMBURGER ANIMATION ===== */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ===== CARD HEADER GLOW EFFECT ===== */
+        .card-header {
+            position: relative;
+        }
+
+        .card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .card:hover .card-header::after {
+            opacity: 1;
+        }
+
+        /* ===== FLOATING PARTICLE TRAIL ON MOUSE ===== */
+        .cursor-trail {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* ===== SECTION BG ANIMATED GRADIENT ===== */
+        .formations {
+            background:
+                radial-gradient(ellipse at 10% 50%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                var(--dark);
+        }
+
+        .temoignages {
+            background:
+                radial-gradient(ellipse at 90% 30%, rgba(124, 58, 237, 0.04) 0%, transparent 50%),
+                var(--dark);
+        }
+
+        .avantages {
+            background:
+                radial-gradient(ellipse at 80% 80%, rgba(0, 212, 255, 0.03) 0%, transparent 50%),
+                var(--surface);
+        }
+
+        .process {
+            background:
+                radial-gradient(ellipse at 20% 20%, rgba(124, 58, 237, 0.03) 0%, transparent 50%),
+                var(--surface);
+        }
+
+        .cta {
+            background:
+                radial-gradient(ellipse at 50% 50%, rgba(0, 212, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse at 30% 70%, rgba(124, 58, 237, 0.04) 0%, transparent 50%),
+                var(--dark);
         }
 
         /* ===================== RESPONSIVE ===================== */
@@ -1143,6 +2068,25 @@
 </head>
 <body>
 
+    <!-- SCROLL PROGRESS -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+
+    <!-- FLOATING SHAPES -->
+    <div class="floating-shapes">
+        <div class="shape shape-square shape-1"></div>
+        <div class="shape shape-circle shape-2"></div>
+        <div class="shape shape-triangle shape-3"></div>
+        <div class="shape shape-diamond shape-4"></div>
+        <div class="shape shape-cross shape-5"></div>
+        <div class="shape shape-ring shape-6"></div>
+        <div class="shape shape-square shape-7"></div>
+        <div class="shape shape-circle shape-8"></div>
+        <div class="shape shape-diamond shape-9"></div>
+        <div class="shape shape-triangle shape-10"></div>
+        <div class="shape shape-cross shape-11"></div>
+        <div class="shape shape-ring shape-12"></div>
+    </div>
+
     <!-- NAV -->
     <nav id="navbar">
         <a href="#" class="nav-logo">
@@ -1198,19 +2142,19 @@
     <!-- STATS -->
     <section class="stats">
         <div class="stats-grid">
-            <div class="stat-item reveal">
+            <div class="stat-item reveal-zoom">
                 <div class="stat-number" data-target="2500">0</div>
                 <div class="stat-label">Eleves formes</div>
             </div>
-            <div class="stat-item reveal reveal-delay-1">
+            <div class="stat-item reveal-zoom reveal-delay-1">
                 <div class="stat-number" data-target="96">0</div>
                 <div class="stat-label">% de reussite</div>
             </div>
-            <div class="stat-item reveal reveal-delay-2">
+            <div class="stat-item reveal-zoom reveal-delay-2">
                 <div class="stat-number" data-target="150">0</div>
                 <div class="stat-label">Entreprises partenaires</div>
             </div>
-            <div class="stat-item reveal reveal-delay-3">
+            <div class="stat-item reveal-zoom reveal-delay-3">
                 <div class="stat-number" data-target="35">0</div>
                 <div class="stat-label">Formateurs experts</div>
             </div>
@@ -1226,7 +2170,7 @@
         </div>
         <div class="cards">
             <!-- Card 1 -->
-            <div class="card card-web reveal">
+            <div class="card card-web reveal-flip">
                 <div class="card-header">
                     <div class="card-icon">&lt;/&gt;</div>
                     <h3>Developpement Web</h3>
@@ -1249,7 +2193,7 @@
             </div>
 
             <!-- Card 2 -->
-            <div class="card card-data reveal reveal-delay-1">
+            <div class="card card-data reveal-flip reveal-delay-1">
                 <div class="card-header">
                     <div class="card-icon">&#128202;</div>
                     <h3>Data Science & IA</h3>
@@ -1272,7 +2216,7 @@
             </div>
 
             <!-- Card 3 -->
-            <div class="card card-cyber reveal reveal-delay-2">
+            <div class="card card-cyber reveal-flip reveal-delay-2">
                 <div class="card-header">
                     <div class="card-icon">&#128274;</div>
                     <h3>Cybersecurite</h3>
@@ -1295,7 +2239,7 @@
             </div>
 
             <!-- Card 4 -->
-            <div class="card card-cloud reveal">
+            <div class="card card-cloud reveal-flip">
                 <div class="card-header">
                     <div class="card-icon">&#9729;&#65039;</div>
                     <h3>Cloud Computing</h3>
@@ -1318,7 +2262,7 @@
             </div>
 
             <!-- Card 5 -->
-            <div class="card card-mobile reveal reveal-delay-1">
+            <div class="card card-mobile reveal-flip reveal-delay-1">
                 <div class="card-header">
                     <div class="card-icon">&#128241;</div>
                     <h3>Developpement Mobile</h3>
@@ -1341,7 +2285,7 @@
             </div>
 
             <!-- Card 6 -->
-            <div class="card card-init reveal reveal-delay-2">
+            <div class="card card-init reveal-flip reveal-delay-2">
                 <div class="card-header">
                     <div class="card-icon">&#128187;</div>
                     <h3>Initiation a l'Informatique</h3>
@@ -1373,22 +2317,22 @@
             <p>Une experience d'apprentissage unique, pensée pour votre reussite.</p>
         </div>
         <div class="avantages-grid">
-            <div class="avantage reveal">
+            <div class="avantage reveal-left">
                 <div class="avantage-icon">&#128188;</div>
                 <h3>Formateurs Experimentes</h3>
                 <p>Nos enseignants sont des professionnels en activite dans le secteur IT.</p>
             </div>
-            <div class="avantage reveal reveal-delay-1">
+            <div class="avantage reveal-left reveal-delay-1">
                 <div class="avantage-icon">&#128187;</div>
                 <h3>Projets Pratiques</h3>
                 <p>Apprenez en faisant avec des projets concrets et realistes.</p>
             </div>
-            <div class="avantage reveal reveal-delay-2">
+            <div class="avantage reveal-right reveal-delay-2">
                 <div class="avantage-icon">&#127891;</div>
                 <h3>Certificats Reconnus</h3>
                 <p>Obtenez des certifications validees par les entreprises du secteur.</p>
             </div>
-            <div class="avantage reveal reveal-delay-3">
+            <div class="avantage reveal-right reveal-delay-3">
                 <div class="avantage-icon">&#128197;</div>
                 <h3>Flexibilite</h3>
                 <p>Cours en presentiel, en ligne ou en format mixte, a votre rythme.</p>
@@ -1404,28 +2348,28 @@
             <p>Un processus simple et efficace pour atteindre vos objectifs.</p>
         </div>
         <div class="process-steps">
-            <div class="process-step reveal">
+            <div class="process-step reveal-left">
                 <div class="step-number">01</div>
                 <div class="step-content">
                     <h3>Choisissez votre formation</h3>
                     <p>Parcourez notre catalogue et selectionnez le programme qui correspond le mieux a vos ambitions et a votre niveau.</p>
                 </div>
             </div>
-            <div class="process-step reveal reveal-delay-1">
+            <div class="process-step reveal-right reveal-delay-1">
                 <div class="step-number">02</div>
                 <div class="step-content">
                     <h3>Inscrivez-vous en ligne</h3>
                     <p>Remplissez le formulaire d'inscription en quelques clics. Notre equipe vous recontacte sous 24h pour finaliser votre admission.</p>
                 </div>
             </div>
-            <div class="process-step reveal reveal-delay-2">
+            <div class="process-step reveal-left reveal-delay-2">
                 <div class="step-number">03</div>
                 <div class="step-content">
                     <h3>Apprenez et pratiquez</h3>
                     <p>Suivez les cours, participez aux ateliers et travaillez sur des projets concrets encadres par vos formateurs.</p>
                 </div>
             </div>
-            <div class="process-step reveal reveal-delay-3">
+            <div class="process-step reveal-right reveal-delay-3">
                 <div class="step-number">04</div>
                 <div class="step-content">
                     <h3>Obtenez votre certification</h3>
@@ -1443,7 +2387,7 @@
             <p>Des milliers d'etudiants nous font confiance pour lancer leur carriere.</p>
         </div>
         <div class="temoignages-grid">
-            <div class="temoignage reveal">
+            <div class="temoignage reveal-flip">
                 <div class="temoignage-stars">
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1461,7 +2405,7 @@
                 </div>
             </div>
 
-            <div class="temoignage reveal reveal-delay-1">
+            <div class="temoignage reveal-flip reveal-delay-1">
                 <div class="temoignage-stars">
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1479,7 +2423,7 @@
                 </div>
             </div>
 
-            <div class="temoignage reveal reveal-delay-2">
+            <div class="temoignage reveal-flip reveal-delay-2">
                 <div class="temoignage-stars">
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
                     <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -1502,7 +2446,7 @@
     <!-- CTA -->
     <section class="cta" id="contact">
         <div class="cta-bg"></div>
-        <div class="cta-content reveal">
+        <div class="cta-content reveal-zoom">
             <h2>Vous etes pret a commencer ?</h2>
             <p>Inscrivez-vous des aujourd'hui et donnez un nouvel elan a votre carriere dans la tech.</p>
             <a href="#" class="btn btn-primary">
@@ -1572,18 +2516,27 @@
         // ===== NAV SCROLL =====
         const navbar = document.getElementById('navbar');
         const backToTop = document.getElementById('backToTop');
+        const scrollProgress = document.getElementById('scrollProgress');
         window.addEventListener('scroll', () => {
             navbar.classList.toggle('scrolled', window.scrollY > 50);
             backToTop.classList.toggle('visible', window.scrollY > 500);
+
+            // Scroll progress
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            scrollProgress.style.width = scrollPercent + '%';
         });
 
         // ===== MOBILE MENU =====
         function toggleMenu() {
             document.getElementById('navLinks').classList.toggle('open');
+            document.getElementById('hamburger').classList.toggle('active');
         }
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('navLinks').classList.remove('open');
+                document.getElementById('hamburger').classList.remove('active');
             });
         });
 
@@ -1600,16 +2553,29 @@
             });
         });
 
-        // ===== SCROLL REVEAL =====
-        const observer = new IntersectionObserver((entries) => {
+        // ===== SCROLL REVEAL (all reveal classes) =====
+        const revealObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
 
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-zoom, .reveal-rotate, .reveal-flip').forEach(el => {
+            revealObserver.observe(el);
+        });
+
+        // ===== SECTION TAG UNDERLINE ON SCROLL =====
+        const tagObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.section-tag').forEach(el => tagObserver.observe(el));
 
         // ===== COUNTER ANIMATION =====
         const counterObserver = new IntersectionObserver((entries) => {
@@ -1651,6 +2617,52 @@
             particle.style.width = particle.style.height = (2 + Math.random() * 3) + 'px';
             particlesContainer.appendChild(particle);
         }
+
+        // ===== CARD 3D TILT EFFECT =====
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+
+                card.style.transform = `translateY(-10px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                card.style.setProperty('--mouse-x', (x / rect.width * 100) + '%');
+                card.style.setProperty('--mouse-y', (y / rect.height * 100) + '%');
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+            });
+        });
+
+        // ===== MAGNETIC BUTTON EFFECT =====
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = '';
+            });
+        });
+
+        // ===== SMOOTH ANCHOR SCROLL =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
     </script>
 </body>
 </html>
